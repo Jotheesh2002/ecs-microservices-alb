@@ -1,0 +1,115 @@
+name: 🚀 Deploy ECS Microservices
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  PROJECT_NAME: ecs-microservices
+
+jobs:
+  deploy:
+    name: 🏗️ Deploy to AWS
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: 🔐 Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: 🏗️ Build and push Service A image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ env.PROJECT_NAME }}-service-a
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        cd service-a
+        echo "Building Service A Docker image..."
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        echo "Pushing Service A image with SHA tag..."
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "Tagging and pushing as latest..."
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+    - name: 🏗️ Build and push Service B image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ env.PROJECT_NAME }}-service-b
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        cd service-b
+        echo "Building Service B Docker image..."
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        echo "Pushing Service B image with SHA tag..."
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "Tagging and pushing as latest..."
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+    - name: 🔧 Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "~1.6.0"
+
+    - name: 🚀 Terraform Init
+      run: |
+        cd terraform
+        terraform init
+
+    - name: 📋 Terraform Plan
+      run: |
+        cd terraform
+        terraform plan -no-color
+
+    - name: 🚀 Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        cd terraform
+        terraform apply -auto-approve -no-color
+
+    - name: 🧪 Test Services
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        cd terraform
+        ALB_DNS_NAME=$(terraform output -raw alb_dns_name)
+        echo "🔗 ALB DNS: $ALB_DNS_NAME"
+        
+        echo "⏰ Waiting for services to be healthy..."
+        sleep 90
+        
+        echo "🧪 Testing Service A:"
+        if curl -f --max-time 30 http://$ALB_DNS_NAME/api/v1/a; then
+          echo "✅ Service A is healthy!"
+        else
+          echo "❌ Service A health check failed"
+          exit 1
+        fi
+        
+        echo "🧪 Testing Service B:"
+        if curl -f --max-time 30 http://$ALB_DNS_NAME/api/v1/b; then
+          echo "✅ Service B is healthy!"
+        else
+          echo "❌ Service B health check failed"
+          exit 1
+        fi
+        
+        echo "🎉 All services are healthy and responding!"
+        echo "🌐 Service A URL: http://$ALB_DNS_NAME/api/v1/a"
+        echo "🌐 Service B URL: http://$ALB_DNS_NAME/api/v1/b"

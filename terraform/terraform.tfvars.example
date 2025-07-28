@@ -1,0 +1,11 @@
+# Copy this file to terraform.tfvars and customize
+aws_region     = "us-east-1"
+project_name   = "ecs-microservices"
+vpc_cidr       = "10.0.0.0/16"
+cpu            = 256
+memory         = 512
+desired_count  = 2
+
+# Docker images (leave empty to use ECR repositories)
+service_a_image = ""
+service_b_image = ""

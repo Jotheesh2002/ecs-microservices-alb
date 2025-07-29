@@ -103,7 +103,7 @@ terraform destroy
 <!-- Row 1 -->
 <div style="display: flex; justify-content: center; gap: 20rem; flex-wrap: wrap; margin-bottom: 20rem;">
   <div style="flex: 1 1 45%; text-align: center;">
-    <h3>✅ Colima </h3>
+    <h3>✅ Terraform </h3>
     <img src="./Screenshots/Terraform.png" alt="API Output" style="width: 100%; max-width: 400px; height: auto; border-radius: 8px;" />
   </div>
   

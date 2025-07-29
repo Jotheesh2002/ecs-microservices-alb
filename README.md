@@ -14,7 +14,7 @@
 
 ## 🧠 Project Overview
 
-> This project demonstrates deploying **two scalable microservices** on **AWS ECS (Fargate)** with routing through an **Application Load Balancer**. It also includes **autoscaling**, **monitoring**, and **modular Terraform code** to automate infrastructure provisioning.
+ This project demonstrates deploying **two scalable microservices** on **AWS ECS (Fargate)** with routing through an **Application Load Balancer**. It also includes **autoscaling**, **monitoring**, and **modular Terraform code** to automate infrastructure provisioning.
 
 ---
 
@@ -47,20 +47,10 @@
 
 ---
 
-## 🔍 Architecture Diagram
-
-                  ┌──────────────────────────┐
-                  │     User Requests        │
-                  └────────────┬─────────────┘
-                               │
-                ┌──────────────▼───────────────┐
-                │     Application Load Balancer│
-                └──────┬────────────┬──────────┘
-                       │            │
-           ┌───────────▼───┐   ┌────▼───────────┐
-           │  ECS Service A │   │  ECS Service B │
-           │ (api/v1/a)     │   │ (api/v1/b)     │
-           └───────────────┘   └────────────────┘
+## 🧱 High-Level Architecture
+<div align="center" style="margin-top: 2rem; margin-bottom: 2rem; animation: fadeInUp 2s ease-in-out;">
+  <img src="./Screenshots/Architecturee.png" alt="Architecture" style="width: 60%; height: auto;" />
+</div>
 
 ---
 

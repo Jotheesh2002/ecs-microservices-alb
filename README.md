@@ -49,7 +49,7 @@
 
 ## 🧱 High-Level Architecture
 <div align="center" style="margin-top: 2rem; margin-bottom: 2rem; animation: fadeInUp 2s ease-in-out;">
-  <img src="./Screenshots/Architecturee.png" alt="Architecture" style="width: 60%; height: auto;" />
+  <img src="Screenshots/architecturee.png" alt="Architecture" style="width: 60%; height: auto;" />
 </div>
 
 ---

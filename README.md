@@ -56,6 +56,7 @@
 
 ## 📁 Folder Structure
 
+```
 ecs-microservices-alb/
 ├── terraform/ # Terraform infrastructure code
 │ ├── main.tf
@@ -68,29 +69,35 @@ ecs-microservices-alb/
 ├── screenshots/ # Screenshots of deployment
 └── README.md # This file 📘
 
-
+```
 ---
 
 ## 🚀 Quick Start
 
-> ⚠️ Prerequisites: AWS CLI configured, Terraform installed, Docker installed.
+Prerequisites: AWS CLI configured, Terraform installed, Docker installed.
 
-```bash
+
 # Step 1: Clone this repository
+```bash
 git clone https://github.com/Jotheesh2002/ecs-microservices-alb.git
 cd ecs-microservices-alb/terraform
-
+```
 # Step 2: Initialize Terraform
+```bash
 terraform init
-
+```
 # Step 3: Preview infrastructure changes
+```bash
 terraform plan
-
+```
 # Step 4: Apply the infrastructure
+```bash
 terraform apply
-
+```
 # Step 5: Destroy (when no longer needed)
+```bash
 terraform destroy
+```
 ✅ Features
 ✅ 2 Microservices deployed using Docker
 
@@ -104,7 +111,7 @@ terraform destroy
 
 ✅ Clean modular folder structure
 
-💡 Future Enhancements
+## 💡 Future Enhancements
 🔁 Add CI/CD using GitHub Actions or Terraform Cloud
 
 🔒 Add IAM role-based permissions
@@ -113,10 +120,10 @@ terraform destroy
 
 🧪 Include test automation framework
 
-🙋‍♂️ Author
+## 🙋‍♂️ Author
 👨‍💻 Jotheeshwaran V
 📍 Chennai, India
-📬 GitHub • LinkedIn • ✉️ jotheesh@example.com
+📬 GitHub • LinkedIn • ✉️ jotheeshwaran2002@gmail.com
 
 ⚖️ License
 This project is licensed under the MIT License. Feel free to use, fork, and contribute!
